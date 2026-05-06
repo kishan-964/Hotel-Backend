@@ -60,3 +60,54 @@ export const getRoomByNumber = async (req, res) => {
     });
   }
 };
+
+// Update room by room number
+export const updateRoom = async (req, res) => {
+  try {
+    const { roomNumber } = req.params;
+    const updatedRoom = await Room.findOneAndUpdate({ roomNumber }, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedRoom) {
+      return res.status(404).json({
+        message: "Room not found"
+      });
+    }
+
+    res.json({
+      message: "Room updated successfully",
+      room: updatedRoom,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error updating room",
+      error,
+    });
+  }
+};
+
+// Delete room by room number
+export const deleteRoom = async (req, res) => {
+  try {
+    const { roomNumber } = req.params;
+    const deletedRoom = await Room.findOneAndDelete({ roomNumber });
+
+    if (!deletedRoom) {
+      return res.status(404).json({
+        message: "Room not found"
+      });
+    }
+
+    res.json({
+      message: "Room deleted successfully",
+      room: deletedRoom,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error deleting room",
+      error,
+    });
+  }
+};

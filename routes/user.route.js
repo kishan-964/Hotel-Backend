@@ -5,7 +5,7 @@ import {
     getProfile,
     updateProfile,
 } from "../controllers/user.controller.js";
-import { authorization } from "../middleware/auth.middleware.js";       
+import { authorization } from "../middlewares/auth.middleware.js";       
 
 const router = express.Router();
 
