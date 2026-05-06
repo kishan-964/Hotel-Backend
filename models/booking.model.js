@@ -5,17 +5,17 @@ const BookingSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  Email: {
+  GuestEmail: {
     type: String,
     required: true
   },
-  Phone: {
+  GuestPhone: {
     type: String,
     required: true
   },
-  roomId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Room"
+  roomNumber: {
+    type: String,
+    required: true
   },
   checkIn: Date,
   checkOut: Date,
