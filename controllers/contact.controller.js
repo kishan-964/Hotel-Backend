@@ -1,9 +1,5 @@
-import { Contact } from "../models/contact.model.js";
+import Contact from "../models/contact.model.js";
 
-// Get all messages
-// Create a new message
-// Delete a message
-// Update message status
 
 export const getContacts = async (req, res) => {
   try {
@@ -17,6 +13,24 @@ export const getContacts = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Error fetching contacts",
+    });
+  }
+};
+
+export const getContactById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const contact = await Contact.findById(id);
+
+    if (!contact) {
+      return res.status(404).json({ message: "Contact not found" });
+    }
+
+    res.status(200).json(contact);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error fetching contact",
     });
   }
 };
