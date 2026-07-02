@@ -1,45 +1,50 @@
 import jwt from "jsonwebtoken";
-import { User } from "../models/user.model.js";
 
-const JWT_SECRET = process.env.JWT_SECRET || "This-is-my-jwt-secret-key";
+const JWT_SECRET =
+  process.env.JWT_SECRET || process.env.JWT_SECRET_KEY || "This-is-my-jwt-secret-key";
 
-export const authorization = async (req, res, next) => {
+
+export const authorization = (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
+
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "Access token required" });
+      return res.status(401).json({
+        success: false,
+        message: "No token provided",
+      });
     }
 
-    const token = authHeader.substring(7); // Remove "Bearer " prefix
+    const token = authHeader.split(" ")[1];
+
     const decoded = jwt.verify(token, JWT_SECRET);
 
-    const user = await User.findById(decoded.userId);
-    if (!user) {
-      return res.status(401).json({ message: "User not found" });
-    }
-
-    req.user = {
-      userId: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-    };
+    req.user = decoded;
 
     next();
   } catch (error) {
-    console.error("Auth middleware error:", error);
-    return res.status(401).json({ message: "Invalid or expired token" });
+    return res.status(401).json({
+      success: false,
+      message: "Invalid or expired token",
+    });
   }
 };
+
 
 export const requireRole = (roles) => {
   return (req, res, next) => {
     if (!req.user) {
-      return res.status(401).json({ message: "Authentication required" });
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized",
+      });
     }
 
     if (!roles.includes(req.user.role)) {
-      return res.status(403).json({ message: "Insufficient permissions" });
+      return res.status(403).json({
+        success: false,
+        message: "Access Denied",
+      });
     }
 
     next();

@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import morgan from "morgan";
 import { configDotenv } from "dotenv";
 
 // Routes
@@ -15,27 +14,22 @@ import reviewRoutes from "./routes/review.route.js";
 import facilityRoutes from "./routes/facility.route.js";
 import contactRoutes from "./routes/contact.route.js";
 import staffRoutes from "./routes/staff.route.js";
-
-// Middleware
-import { errorHandler, notFoundHandler } from "./middlewares/error.middleware.js";
+import { authorization } from "./middlewares/auth.middleware.js";
 
 configDotenv();
 
+
 const app = express();
-
-// Middleware
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || "http://localhost:3000",
-  credentials: true,
-}));
-app.use(morgan("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// Health check route
-app.get("/health", (req, res) => {
-  res.json({ message: "Server is running", timestamp: new Date() });
-});
+app.use(cors({
+    origin: process.env.FRONTED_URL || "http://localhost:5173",
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    
+})
+
+)
 
 // Routes
 app.use("/api/auth", authRoutes);
@@ -50,10 +44,6 @@ app.use("/api", facilityRoutes);
 app.use("/api", contactRoutes);
 app.use("/api", staffRoutes);
 
-// 404 Not Found handler
-app.use(notFoundHandler);
 
-// Global Error Handler (must be last)
-app.use(errorHandler);
 
 export default app;

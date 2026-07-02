@@ -7,6 +7,7 @@ const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || "This-is-my-jwt-ref
 
 export const registerUser = async (req, res) => {
   try {
+    console.log(req.body);
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
