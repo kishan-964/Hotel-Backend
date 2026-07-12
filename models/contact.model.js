@@ -27,11 +27,10 @@ const contactSchema = new mongoose.Schema(
       enum: ["pending", "in-progress", "resolved", "closed"],
       default: "pending",
     },
-     },
-  
+  },
   {
     timestamps: true,
-  },
+  }
 );
 
 export default mongoose.model("Contact", contactSchema);

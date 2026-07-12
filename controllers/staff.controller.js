@@ -1,5 +1,5 @@
 import Staff from "../models/staff.model.js";
-import { User } from "../models/user.model.js";
+import User from "../models/user.model.js";
 
 export const createStaff = async (req, res) => {
   try {
